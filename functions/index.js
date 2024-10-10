@@ -1,19 +1,36 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+const functions = require('firebase-functions');
+const { WebhookClient } = require('dialogflow-fulfillment');
 
-const {onRequest} = require("firebase-functions/v2/https");
-const logger = require("firebase-functions/logger");
+exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, response) => {
+  const agent = new WebhookClient({ request, response });
 
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
+  function welcome(agent) {
+    agent.add('Welcome to my AI-powered chatbot!');
+  }
 
-// exports.helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+  function fallback(agent) {
+    agent.add("I'm sorry, I didn't understand that.");
+    agent.add('Can you please rephrase?');
+  }
+
+  function bookFlight(agent) {
+    agent.add('Sure, I can help you book a flight. Where are you flying to?');
+  }
+
+  function orderPizza(agent) {
+    agent.add('Sure, I can help you order a pizza. What toppings would you like on it?');
+  }
+
+  function reserveTable(agent) {
+    agent.add('Sure, I can help you reserve a table. Which restaurant would you like a reservation for?');
+  }
+
+  let intentMap = new Map();
+  intentMap.set('Default Welcome Intent', welcome);
+  intentMap.set('Default Fallback Intent', fallback);
+  intentMap.set('BookFlight', bookFlight);
+  intentMap.set('OrderPizza', orderPizza);
+  intentMap.set('ReserveTable', reserveTable);
+
+  agent.handleRequest(intentMap);
+});
