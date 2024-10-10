@@ -1,0 +1,7 @@
+Flask
+aiohttp
+botbuilder-core
+botbuilder-ai
+botbuilder-integration-aiohttp
+firebase-admin
+requests
