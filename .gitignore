@@ -1,2 +1,6 @@
+.firebase
 firebase-debug.log
 chat_bot_env
+.firebase/hosting.cHVibGlj.cache
+functions/node_modules
+*.local
