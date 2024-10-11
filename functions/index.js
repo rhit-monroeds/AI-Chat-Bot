@@ -18,14 +18,20 @@ exports.dialogflowFirebaseFulfillment = onRequest(
         const agent = new WebhookClient({ request, response });
         async function fallback(agent) {
             const userMessage = agent.query;
+            let conversationHistory = agent.context.get('conversation')?.parameters?.history || [];
+            conversationHistory.push({ role: 'user', content: userMessage });
             try {
               const completion = await openai.chat.completions.create({
                 model: 'gpt-4o',
-                messages: [
-                  { role: 'user', content: userMessage },
-                ],
+                messages: conversationHistory
               });
               const aiResponse = completion.choices[0].message.content.trim();
+              conversationHistory.push({ role: 'assistant', content: aiResponse });
+              agent.context.set({
+                name: 'conversation',
+                lifespan: 50,
+                parameters: { history: conversationHistory },
+              });
               agent.add(aiResponse);
               console.log(aiResponse);
             } catch (error) {
