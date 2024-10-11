@@ -20,9 +20,8 @@ exports.dialogflowFirebaseFulfillment = onRequest(
             const userMessage = agent.query;
             try {
               const completion = await openai.chat.completions.create({
-                model: 'gpt-3.5-turbo',
+                model: 'gpt-4o',
                 messages: [
-                  { role: 'system', content: 'You are a helpful assistant.' },
                   { role: 'user', content: userMessage },
                 ],
               });
@@ -30,8 +29,8 @@ exports.dialogflowFirebaseFulfillment = onRequest(
               agent.add(aiResponse);
               console.log(aiResponse);
             } catch (error) {
-              console.error('Error with OpenAI API call:', error);
-              agent.add("I'm sorry, but I'm having trouble processing your request right now.");
+              console.error('OpenAI API call error:', error);
+              agent.add("I'm sorry, I can't process your request right now.");
             }
         }
         let intentMap = new Map();
