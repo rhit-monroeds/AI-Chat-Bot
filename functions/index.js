@@ -1,3 +1,6 @@
+// this function receives a webhook from DialogFlow, sends the user message
+// to a OpenAI model, and returns the output to DialogFlow via webhook
+
 const { WebhookClient } = require('dialogflow-fulfillment');
 const OpenAI = require('openai');
 const { defineSecret } = require('firebase-functions/params');
